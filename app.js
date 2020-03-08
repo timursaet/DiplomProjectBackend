@@ -38,9 +38,22 @@ io.sockets.on('connection', function(socket) {
         console.log('Отключились')
     })
     socket.on('send mess', (data) => {
-        io.sockets.emit('add mess', {msg: data});
+        console.log(data.message, data.id)
+        if (data.id.length != 0) {
+            User.findByIdAndUpdate(data.id, {messengerMessage: data.message}, function(err, user){
+                if(err) return console.log(err);
+            });
+         }
+        io.sockets.emit('add mess', {msg: data.message});
     })    
 });
+
+app.post("/editMssengerMessage", (req, res) => {
+    const { id } = req.body;
+    User.findByIdAndUpdate(id, {messengerMessage: ''}, {new: true}, function(err, user){
+        if(err) return console.log(err);
+    });
+})
 
 app.post("/login", (req, res) =>  {
     const { username, password } = req.body;

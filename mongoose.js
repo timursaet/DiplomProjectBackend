@@ -12,7 +12,8 @@ const userScheme = new Schema({
     phone: String,
     age: Number,
     task: String, 
-    status: String
+    status: String,
+    messengerMessage: String,
 },
 {
     versionKey: false
@@ -33,7 +34,8 @@ module.exports = User;
 //     phone: "8-937-158-05-08",
 //     age: 22,
 //     task: '-',
-//     status: "manager"
+//     status: "manager",
+//     messengerMessage: ""   
 //  });
 
 //  const user = new User({
@@ -41,14 +43,15 @@ module.exports = User;
 //     password: "123",
 //     name: "Ильшат",
 //     lastname: "Хисамов",
-//     email: "ilshathis@mail.ru",
-//     company: "Bashkir state university",
-//     phone: "8-937-158-05-08",
+//     email: "khisamov98@inbox.ru",
+//     company: "BSU",
+//     phone: "8-952-688-597",
 //     age: 22,
 //     task: '-',
-//     status: "employee"
+//     status: "employee",
+//     messengerMessage: ""   
 //  });
-  
+
 // user.save(function(err){
 //     mongoose.disconnect();  // отключение от базы данных
       
