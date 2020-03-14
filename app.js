@@ -4,7 +4,9 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const exjwt = require("express-jwt");
 const morgan = require("morgan");
-const User = require('./mongoose')
+const multer = require("multer");
+const User = require('./mongoose');
+const fs = require("fs");
 
 const app = express();
 const jsonParser = express.json();
@@ -150,4 +152,46 @@ app.post("/addTask", (req, res) => {
     User.findByIdAndUpdate(id, {task: task}, function(err, user){
         if(err) return console.log(err);
     });
+})
+
+const storageConfig = multer.diskStorage({
+    destination: (req, file, cb) =>{
+        cb(null, "uploads");
+    },
+    filename: (req, file, cb) =>{
+        cb(null, file.originalname);
+    }
+});
+
+app.use(multer({storage:storageConfig}).single("filedata"));
+
+app.post("/upload", (req, res) => {
+    let filedata = req.file;
+    console.log(filedata);
+    if(!filedata)
+        res.send("Ошибка при загрузке файла");
+    else
+        res.send("Файл загружен");
+});
+
+app.get("/downloadFiles", (req, res) => {
+    let file = __dirname + '/uploads/';
+    fs.readdir(file, function(err, items) {
+            console.log(items)
+            res.json({
+                data : items
+            })
+        });
+})
+
+app.get('/uploads/:items', (req, res) => {
+    let fileName = req.params.items,
+        file = __dirname + '/uploads/' + fileName;
+    res.download(file); 
+})  
+
+app.post("/deleteFiles", (req, res) => {
+    console.log(req.body.delete)
+    let file = __dirname + '/uploads/' + req.body.delete;
+    fs.unlinkSync(file);
 })
